@@ -1,0 +1,6 @@
+typing
+pydantic
+fastapi
+uvicorn
+pydantic-settings
+pydantic[email]
