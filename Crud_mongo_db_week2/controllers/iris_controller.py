@@ -13,5 +13,5 @@ async def get_prediction(payload):
             "prediction" : result
         }
     except Exception as e:
-        raise HTTPException(status_code=400, detail="ERROR")
+        raise HTTPException(status_code=400, detail=str(e))
 

@@ -12,7 +12,7 @@ def perform_prediction(data):
     prediction_index = loaded_model.predict(input_features)[0]
     return {
         "prediction_code": int(prediction_index),
-        "prediction_name": SPECIES_MAPPING[int(prediction_index),"Unknown"]
+        "prediction_name": SPECIES_MAPPING.get(int(prediction_index),"Unknown")
 
 
     }
