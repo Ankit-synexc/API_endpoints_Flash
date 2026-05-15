@@ -1,32 +1,33 @@
 from typing import Optional
-from pydantic import BaseModel ,EmailStr ,Field
-from beanie import Document , Indexed
+from pydantic import BaseModel, EmailStr, Field
+from beanie import Document, Indexed
+
 
 class User(Document):
-    name : str
-    email : Indexed(EmailStr , unique = True)
-    age : Optional[int]
+    name: str
+    email: Indexed(EmailStr, unique=True)
+    age: Optional[int]
 
-    class Settings(BaseModel):
-        name  = "users"
+    class Setting:
+        name = "users"
         user_state_management = True
 
+
 class CreateUser(BaseModel):
-    name : str = Field(..., min_length=3, max_length=20)
-    email : EmailStr
+    name: str = Field(..., min_length=3, max_length=20)
+    email: EmailStr
     age: Optional[int] = None
+
+
 class UserUpdate(BaseModel):
-    name : Optional[str] = None
-    email : Optional[EmailStr] = None
-    age : Optional[int] = None
+    name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    age: Optional[int] = None
+
 
 class UserResponse(BaseModel):
-    id : str
-    name : str
-    email : EmailStr
-    age : Optional[int]
-
-
-    model_config = ("from attributes" , True)
-
-
+    id: str
+    name: str
+    email: EmailStr
+    age: Optional[int]
+    model_config = {"from_attributes": True}

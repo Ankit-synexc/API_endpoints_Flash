@@ -1,13 +1,16 @@
 from beanie import init_beanie
-from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo import AsyncMongoClient
 
-from config.settings import Settings
+from config.settings import settings
 from models.user_schema import User
 
+
 async def init_db():
-    client = AsyncIOMotorClient(Settings.MONGO_URL)
+    # Use PyMongo's native AsyncMongoClient instead of Motor
+    client = AsyncMongoClient(settings.MONGO_URL)
+
     await init_beanie(
-        database = client[Settings.DB_NAME],
-        document_models= [User]
+        database=client[settings.DB_NAME],
+        document_models=[User]
     )
     print("connected to the database")

@@ -12,6 +12,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="User Crud API",
+    lifespan=lifespan
 )
 
 
