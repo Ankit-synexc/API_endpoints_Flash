@@ -1,0 +1,29 @@
+from fastapi import APIRouter , status
+from typing import List
+from beanie import PydanticObjectId
+from motor.motor_asyncio import AsyncIOMotorClient
+from controllers import user_controller
+
+from models import user_schema
+
+router = APIRouter()
+
+@router.post('/users', response_model=user_schema.UserResponse)
+async def route_create_user (payload:user_schema.CreateUser):
+    return await user_controller.create_user(payload)
+
+@router.get('/users' , response_model=List[user_schema.UserResponse])
+async def route_get_users():
+    return await user_controller.get_all_users()
+
+@router.get('/{user_id}', response_model=user_schema.UserResponse)})
+async def route_get_user_by_id(user_id:PydanticObjectId):
+    return await user_controller.get_user_by_id(user_id)
+
+@router.patch('/{user_id}' , response_model = user_schema.UserResponse)
+async def route_update_user(user_id: PydanticObjectId , payload: user_schema.UserUpdate):
+    return await user_controller.update_user(payload)
+
+@router.delete('/{user_id}', response_model=user_schema.UserResponse)
+async def route_delete_user(user_id: PydanticObjectId ):
+    return await user_controller.delete_user(user_id)
