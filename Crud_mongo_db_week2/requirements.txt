@@ -1,7 +1,0 @@
-fastapi
-beanie
-pymongo
-pydantic-settings
-typing
-pydantic
-uvicorn
