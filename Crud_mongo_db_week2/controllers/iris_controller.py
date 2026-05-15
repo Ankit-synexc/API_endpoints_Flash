@@ -1,5 +1,5 @@
 from utils.helper import loaded_model
-from services import iris_services
+from services import iris_services , prediction_log_services
 
 from fastapi import HTTPException
 
@@ -15,3 +15,4 @@ async def get_prediction(payload):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+    iris_services.predict_iris(payload)

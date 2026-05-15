@@ -9,4 +9,3 @@ async def predict_iris(features):
 
     )
     await log_entry.insert()
-    return log_entry
