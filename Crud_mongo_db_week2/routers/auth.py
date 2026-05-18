@@ -1,24 +1,36 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
+from beanie import PydanticObjectId
+from datetime import datetime
 
-from models.user_schema import User
 from models.session_schema import Session
-from utils.auth import verify_pass, create_access_token
+from utils.dependencies import Oauth2_scheme
+import jwt
+from config.settings import settings
 
 router = APIRouter()
 
-@router.post('/login')
-async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = await User.find_one({"email": form_data.username})
 
-    if not user or not verify_pass(form_data.password, user.password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
+@router.post('/logout')
+async def logout(token: str = Depends(Oauth2_scheme)):
+    # Extract session_id out of the JWT bearer payload
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        session_id: str = payload.get("session_id")
+        if not session_id:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid session token")
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials")
 
-    session = await Session.find_one(Session.user_id == str(user.id), Session.status == 'active')
-    if not session:
-        session = Session(user_id=str(user.id), status='active')
-        await session.insert()
+    # Fetch the active session document from MongoDB
+    session = await Session.get(PydanticObjectId(session_id))
 
-    token = create_access_token(user_id=str(user.id), session_id=str(session.id))
+    if not session or session.status != "active":
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Session is already invalid or expired")
 
-    return {"access_token": token, "token_type": "bearer"}
+    # Update and commit the status field changes directly to your MongoDB collection
+    await session.set({
+        "status": "inactive",
+        "updated_at": datetime.now()
+    })
+
+    return {"detail": "Session successfully revoked in database. Logged out."}
