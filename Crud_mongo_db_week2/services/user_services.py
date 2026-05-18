@@ -1,7 +1,8 @@
-from datetime import datetime
-from beanie import PydanticObjectId
-from models.user_schema import User, CreateUser
 from typing import List, Optional
+
+from beanie import PydanticObjectId
+
+from models.user_schema import User, CreateUser
 from utils.auth import hash_pass
 
 

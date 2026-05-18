@@ -1,6 +1,8 @@
-from beanie import PydanticObjectId , Document
+from datetime import datetime
+
+from beanie import Document
 from pydantic import Field
-from datetime import datetime , timezone
+
 
 class Session(Document):
     user_id : str

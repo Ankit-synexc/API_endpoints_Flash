@@ -1,12 +1,13 @@
-from fastapi import APIRouter, FastAPI
 from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
 
 from config.db import init_db
 from routers.api_routes import api_router
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan():
     await init_db()
     yield
 

@@ -4,6 +4,7 @@ from models.Prediction_log_schema import PredictionLog
 from beanie import PydanticObjectId
 from typing import Optional
 
+# noinspection SpellCheckingInspection
 SPECIES_MAPPING = {0:"Setosa",1:"Versicolor",2:"Virginica"}
 
 async def perform_prediction(data   , user_id :Optional[PydanticObjectId] = None):

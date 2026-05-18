@@ -8,6 +8,7 @@ from models.user_schema import User
 
 Oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
+
 async def get_current_active_user(token: str = Depends(Oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -22,12 +23,13 @@ async def get_current_active_user(token: str = Depends(Oauth2_scheme)):
 
         if user_id is None or session_id is None:
             raise credentials_exception
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Expired. Please log in again")
-    except jwt.InvalidTokenError:
+
+        pydantic_user_id = PydanticObjectId(user_id)
+        pydantic_session_id = PydanticObjectId(session_id)
+    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, ValueError, Exception):
         raise credentials_exception
 
-    session = await Session.get(PydanticObjectId(session_id))
+    session = await Session.get(pydantic_session_id)
 
     if not session or session.status != "active":
         raise HTTPException(
@@ -35,7 +37,7 @@ async def get_current_active_user(token: str = Depends(Oauth2_scheme)):
             detail="Session has been revoked or is invalid"
         )
 
-    user = await User.get(PydanticObjectId(user_id))
+    user = await User.get(pydantic_user_id)
     if not user:
         raise credentials_exception
 

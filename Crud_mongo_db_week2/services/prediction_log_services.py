@@ -6,6 +6,8 @@ async def predict_iris(features):
         sepal_width=features.sepal_width,
         petal_length=features.petal_length,
         petal_width=features.petal_width,
+        prediction = features.prediction,
+        model_version = features.model_version,
 
     )
     await log_entry.insert()
