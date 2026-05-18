@@ -15,7 +15,11 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     if not user or not verify_pass(form_data.password , user.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Incorrect username or password")
 
-    session = await Session.find_one({"user_id": user.id} , status = 'active')
-    await Session.insert()
+    session = await Session.find_one({"user_id": str(user.id)} , status = 'active')
+    if not session:
+        session =  Session(user_id= str(user.id) , status = 'active')
+        await session.insert()
 
-    token = create_access_token(user_id  = str(User.id), session_id=str(Session.id))
+    token = create_access_token(user_id  = str(user.id), session_id=str(session.id))
+
+    return {"access_token":token,"token_type":"bearer"}

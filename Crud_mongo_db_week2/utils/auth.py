@@ -4,7 +4,7 @@ from datetime import datetime , timedelta , timezone
 from config.settings import Settings
 
 def hash_pass(password : str):
-    salt = bcrypt.gensalt()
+    salt = bcrypt.gensalt(1)
     return bcrypt.hashpw(password.encode("utf-8"), salt).decode("utf-8")
 
 def verify_pass(plain_pass : str, hashed_pass : str):
@@ -12,7 +12,7 @@ def verify_pass(plain_pass : str, hashed_pass : str):
 
 def create_access_token(user_id : str , session_id : str):
     payload = {
-        "user_id" : user_id,
+        "sub" : user_id,
         "session_id" : session_id,
         "exp" : datetime.now(timezone.utc ) + timedelta(hours = 1)
     }
