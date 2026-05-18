@@ -14,6 +14,7 @@ async def route_create_user(payload: user_schema.CreateUser):
 
 @router.get('/users' , response_model=List[user_schema.UserResponse])
 async def route_get_users():
+
     return await user_controller.get_all_users()
 
 @router.get('/users/{user_id}', response_model=user_schema.UserResponse)
