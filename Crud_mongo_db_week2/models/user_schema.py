@@ -7,6 +7,7 @@ class User(Document):
     name: str
     email: Indexed(EmailStr, unique=True)
     age: Optional[int]
+    password : str
 
     class Setting:
         name = "users"
@@ -17,6 +18,7 @@ class CreateUser(BaseModel):
     name: str = Field(..., min_length=3, max_length=20)
     email: EmailStr
     age: Optional[int] = None
+    password: Optional[str] = None
 
 
 class UserUpdate(BaseModel):

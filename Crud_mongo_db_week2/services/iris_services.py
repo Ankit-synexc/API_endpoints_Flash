@@ -1,10 +1,12 @@
 import numpy as np
 from utils.helper import loaded_model
 from models.Prediction_log_schema import PredictionLog
+from beanie import PydanticObjectId
+from typing import Optional
 
 SPECIES_MAPPING = {0:"Setosa",1:"Versicolor",2:"Virginica"}
 
-async def perform_prediction(data):
+async def perform_prediction(data   , user_id :Optional[PydanticObjectId] = None):
     input_features = np.array([[data.sepal_length,
                                 data.sepal_width,
                                 data.petal_length,
@@ -14,6 +16,7 @@ async def perform_prediction(data):
     prediction_name = SPECIES_MAPPING.get(int(prediction_index), "Unknown")
 
     log_entry = PredictionLog(
+        user_id = user_id ,
         sepal_length=data.sepal_length,
         sepal_width=data.sepal_width,
         petal_length=data.petal_length,
