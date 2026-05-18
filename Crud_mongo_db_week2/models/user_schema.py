@@ -2,30 +2,26 @@ from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
 from beanie import Document, Indexed
 
-
 class User(Document):
     name: str
     email: Indexed(EmailStr, unique=True)
     age: Optional[int]
-    password : str
+    password: str
 
-    class Setting:
+    class Settings:
         name = "users"
         user_state_management = True
-
 
 class CreateUser(BaseModel):
     name: str = Field(..., min_length=3, max_length=20)
     email: EmailStr
     age: Optional[int] = None
-    password: Optional[str] = None
-
+    password: str = Field(..., min_length=6)
 
 class UserUpdate(BaseModel):
     name: Optional[str] = None
     email: Optional[EmailStr] = None
     age: Optional[int] = None
-
 
 class UserResponse(BaseModel):
     id: str

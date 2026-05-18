@@ -2,12 +2,11 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 import jwt
 from beanie import PydanticObjectId
-from config.settings import Settings
+from config.settings import settings
 from models.session_schema import Session
 from models.user_schema import User
 
 Oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
-
 
 async def get_current_active_user(token: str = Depends(Oauth2_scheme)):
     credentials_exception = HTTPException(
@@ -17,7 +16,7 @@ async def get_current_active_user(token: str = Depends(Oauth2_scheme)):
     )
 
     try:
-        payload = jwt.decode(token, Settings.SECRET_KEY, algorithms=[Settings.ALGORITHM])
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         user_id: str = payload.get("sub")
         session_id: str = payload.get("session_id")
 

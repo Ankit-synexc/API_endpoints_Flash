@@ -1,7 +1,7 @@
 import bcrypt
 import jwt
 from datetime import datetime , timedelta , timezone
-from config.settings import Settings
+from config.settings import settings
 
 def hash_pass(password : str):
     salt = bcrypt.gensalt(1)
@@ -16,5 +16,5 @@ def create_access_token(user_id : str , session_id : str):
         "session_id" : session_id,
         "exp" : datetime.now(timezone.utc ) + timedelta(hours = 1)
     }
-    return jwt.encode(payload, Settings.SECRET_KEY, algorithm =Settings.ALGORITHM )
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm =Settings.ALGORITHM )
 
