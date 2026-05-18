@@ -14,6 +14,6 @@ def create_access_token(user_id, session_id):
     payload = {
         "sub": str(user_id),
         "session_id": str(session_id),
-        "exp": datetime.now(timezone.utc) + timedelta(hours=1)
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=2),
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)

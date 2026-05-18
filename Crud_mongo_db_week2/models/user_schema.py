@@ -13,10 +13,10 @@ class User(Document):
         user_state_management = True
 
 class CreateUser(BaseModel):
-    name: str = Field(..., min_length=3, max_length=20)
+    name: str = Field
     email: EmailStr
     age: Optional[int] = None
-    password: str = Field(..., min_length=6)
+    password: str = Field
 
 class UserUpdate(BaseModel):
     name: Optional[str] = None
